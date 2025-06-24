@@ -133,7 +133,6 @@ class Track:
             image = Image.open(track_dir / str(map_filename)).transpose(
                 Transpose.FLIP_TOP_BOTTOM
             )
-
             occupancy_map = np.array(image).astype(np.float32)
             occupancy_map[occupancy_map <= 128] = 0.0
             occupancy_map[occupancy_map > 128] = 255.0
@@ -191,9 +190,9 @@ class Track:
         try:
             if type(path) is str:
                 path = pathlib.Path(path)
-        
+
             track_spec = Track.load_spec(
-                track=path.stem, filespec=path
+                track=path.stem, filespec=path.parent / f"{path.stem}_map.yaml"
             )
             track_spec.resolution = track_spec.resolution * track_scale
             track_spec.origin = (
@@ -209,18 +208,27 @@ class Track:
             occupancy_map = np.array(image).astype(np.float32)
             occupancy_map[occupancy_map <= 128] = 0.0
             occupancy_map[occupancy_map > 128] = 255.0
-
+            
             # if exists, load centerline
-            if (path / f"{path.stem}_centerline.csv").exists():
-                centerline = Raceline.from_centerline_file(path / f"{path.stem}_centerline.csv")
+            if (path.parent / f"{path.stem}_centerline.csv").exists():
+                centerline = Raceline.from_centerline_file(path.parent / f"{path.stem}_centerline.csv",
+                                                           track_scale=track_scale,)
             else:
                 centerline = None
 
             # if exists, load raceline
-            if (path / f"{path.stem}_raceline.csv").exists():
-                raceline = Raceline.from_raceline_file(path / f"{path.stem}_raceline.csv")
+            if (path.parent / f"{path.stem}_raceline.csv").exists():
+                raceline = Raceline.from_raceline_file(path.parent / f"{path.stem}_raceline.csv",
+                                                       track_scale=track_scale,)
             else:
                 raceline = centerline
+                
+            if centerline is None:
+                centerline = raceline
+            if raceline is None and centerline is None:
+                raise ValueError(
+                    f"Please provide a centerline/raceline."
+                )
 
             return Track(
                 spec=track_spec,

@@ -23,16 +23,10 @@
 """
 Author: Hongrui Zheng, Zirui Zang
 """
-
-# gym imports
 import gymnasium as gym
-
-# others
 import numpy as np
 
 from .action import CarAction, from_single_to_multi_action_space
-
-# base classes
 from .base_classes import DynamicModel, Simulator
 from .integrator import IntegratorType
 from .observation import observation_factory
@@ -122,8 +116,11 @@ class F110Env(gym.Env):
             self.lap_counts = np.zeros((self.num_agents, ))
             self.sim_time = 0.0
         
-        if isinstance(self.map, Track):
-            self.track = self.map
+        if '/' in self.map or '\\' in self.map:
+            self.track = Track.from_track_path(
+                self.map,
+                track_scale=self.config["map_scale"],
+            )
         else:
             self.track = Track.from_track_name(
                 self.map,
@@ -202,14 +199,14 @@ class F110Env(gym.Env):
             "map": "Spielberg",
             "map_scale": 1.0,
             "params": cls.f1tenth_vehicle_params(),
-            "num_agents": 2,
+            "num_agents": 1,
             "timestep": 0.01,
             "integrator_timestep": 0.01,
             "ego_idx": 0,
             "max_laps": 'inf',  # 'inf' for infinite laps, or a positive integer
             "integrator": "rk4",
             "model": "st", # "ks", "st", "mb"
-            "control_input": ["speed", "steering_angle"],
+            "control_input": ["speed", "steering_angle"], # ["speed", "steering_angle"], ["accl", "steering_speed"]
             "observation_config": {"type": "direct"},
             "reset_config": {"type": None},
             "enable_rendering": True,
@@ -220,7 +217,7 @@ class F110Env(gym.Env):
             "lidar_noise_std": 0.01,
             "steer_delay_buffer_size": 1,
             "compute_frenet": True, 
-            "collision_check_method": "bounding_box", # "lidar_scan", "bounding_box"
+            "collision_check_method": "lidar_scan", # "lidar_scan", "bounding_box"
             "loop_counting_method": "frenet_based", # "toggle", "frenet_based", "winding_angle"
         }
 

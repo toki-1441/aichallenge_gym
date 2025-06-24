@@ -304,11 +304,11 @@ def main():
     work = {
         "mass": 3.463388126201571,
         "lf": 0.15597534362552312,
-        "tlad": 0.82461887897713965,
-        "vgain": 0.5,
+        "tlad": 0.82461887897713965 * 2,
+        "vgain": 1.,
     }
 
-    num_agents = 2
+    num_agents = 1
     env = gym.make(
         "f1tenth_gym:f1tenth-v0",
         config={
@@ -330,7 +330,7 @@ def main():
             "compute_frenet": 0,
             "max_laps": 2,  # 'inf' for infinite laps, or a positive integer
         },
-        render_mode="unlimited",
+        render_mode="unlimited", # "human", "human_fast", "unlimited"
     )
     track = env.unwrapped.track
 
@@ -348,17 +348,16 @@ def main():
     for r in planner.get_render_callbacks():
         env.unwrapped.add_render_callback(r)
 
-    frenet_start = np.array(env.unwrapped.track.frenet_to_cartesian(0, 0, 0))
+    frenet_start = np.array(env.unwrapped.track.frenet_to_cartesian(0.0, 0, 0))
     frenet_start2 = np.array(env.unwrapped.track.frenet_to_cartesian(10, 0, 0))
     init_poses = np.array([frenet_start, frenet_start2])
-    obs, info = env.reset(options={'poses':init_poses})
+    obs, info = env.reset(options={'poses':init_poses[:num_agents]})
     done = False
     env.render()
 
     laptime = 0.0
     start = time.time()
     times = []
-
     while not done:
         action = env.action_space.sample()
         for i, agent_id in enumerate(obs.keys()):
@@ -374,7 +373,6 @@ def main():
         obs, step_reward, done, truncated, info = env.step(action)
         
         times.append(1/(time.time() - t1))
-        # print(info)
         if len(times) > 2000:
             print("FPS:", np.mean(times))
             times = []
@@ -386,9 +384,9 @@ def main():
 if __name__ == "__main__":
     main()
 # %%
-work = {
-    "mass": 3.463388126201571,
-    "lf": 0.15597534362552312,
-    "tlad": 0.82461887897713965 * 10,
-    "vgain": 1,
-}
+# work = {
+#     "mass": 3.463388126201571,
+#     "lf": 0.15597534362552312,
+#     "tlad": 0.82461887897713965 * 10,
+#     "vgain": 1,
+# }
