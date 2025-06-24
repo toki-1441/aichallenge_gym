@@ -157,7 +157,7 @@ class Track:
 
             return Track(
                 spec=track_spec,
-                filepath=str((track_dir / map_filename.stem).absolute()),
+                filepath=str((track_dir / track).absolute()),
                 ext=map_filename.suffix,
                 occupancy_map=occupancy_map,
                 centerline=centerline,

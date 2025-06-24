@@ -71,7 +71,7 @@ class CarRenderer(ObjectRenderer):
             [s,  c, 0],
             [0,  0, 1]
         ])
-        return ((self.base_rect * scale) @ R.T) + np.array([x, y, 0.01])
+        return ((self.base_rect * scale) @ R.T) + np.array([x, y, 0.02])
         
     def update(self, obs: dict[str, np.ndarray], id: str):        
         state = obs[id]["std_state"].astype(float)
@@ -96,12 +96,12 @@ class CarRenderer(ObjectRenderer):
                                 smooth=False,
                                 drawEdges=False,)
             self.mesh.rotate(self.pose[2] / np.pi * 180, 0, 0, 1)
-            self.mesh.translate(self.pose[0], self.pose[1], 0.01)
+            self.mesh.translate(self.pose[0], self.pose[1], 0.02)
             self.scale = scale
         else:
             self.mesh.resetTransform()
             self.mesh.rotate(self.pose[2] / np.pi * 180, 0, 0, 1)
-            self.mesh.translate(self.pose[0], self.pose[1], 0.01)
+            self.mesh.translate(self.pose[0], self.pose[1], 0.02)
 
 class LinesRenderer(ObjectRenderer):
     def __init__(
