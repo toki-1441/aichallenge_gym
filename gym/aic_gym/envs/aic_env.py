@@ -30,7 +30,7 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 
 # base classes
-from f110_gym.envs.base_classes import Simulator, Integrator
+from aic_gym.envs.base_classes import Simulator, Integrator
 
 # others
 import numpy as np
@@ -50,11 +50,11 @@ VIDEO_H = 400
 WINDOW_W = 1000
 WINDOW_H = 800
 
-class F110Env(gym.Env):
+class AICEnv(gym.Env):
     """
     OpenAI gym environment for F1TENTH
     
-    Env should be initialized by calling gym.make('f110_gym:f110-v0', **kwargs)
+    Env should be initialized by calling gym.make('aic_gym:aic-v0', **kwargs)
 
     Args:
         kwargs:
@@ -279,7 +279,7 @@ class F110Env(gym.Env):
         obs['lap_times'] = self.lap_times
         obs['lap_counts'] = self.lap_counts
 
-        F110Env.current_obs = obs
+        AICEnv.current_obs = obs
 
         self.render_obs = {
             'ego_idx': obs['ego_idx'],
@@ -382,7 +382,7 @@ class F110Env(gym.Env):
             callback_func (function (EnvRenderer) -> None): custom function to called during render()
         """
 
-        F110Env.render_callbacks.append(callback_func)
+        AICEnv.render_callbacks.append(callback_func)
 
     def render(self, mode='human'):
         """
@@ -398,20 +398,20 @@ class F110Env(gym.Env):
         """
         assert mode in ['human', 'human_fast']
         
-        if F110Env.renderer is None:
+        if AICEnv.renderer is None:
             # first call, initialize everything
-            from f110_gym.envs.rendering import EnvRenderer
-            F110Env.renderer = EnvRenderer(WINDOW_W, WINDOW_H)
-            F110Env.renderer.update_map(self.map_name, self.map_ext)
+            from aic_gym.envs.rendering import EnvRenderer
+            AICEnv.renderer = EnvRenderer(WINDOW_W, WINDOW_H)
+            AICEnv.renderer.update_map(self.map_name, self.map_ext)
             
-        F110Env.renderer.update_obs(self.render_obs)
+        AICEnv.renderer.update_obs(self.render_obs)
 
-        for render_callback in F110Env.render_callbacks:
-            render_callback(F110Env.renderer)
+        for render_callback in AICEnv.render_callbacks:
+            render_callback(AICEnv.renderer)
         
-        F110Env.renderer.dispatch_events()
-        F110Env.renderer.on_draw()
-        F110Env.renderer.flip()
+        AICEnv.renderer.dispatch_events()
+        AICEnv.renderer.on_draw()
+        AICEnv.renderer.flip()
         if mode == 'human':
             time.sleep(0.005)
         elif mode == 'human_fast':

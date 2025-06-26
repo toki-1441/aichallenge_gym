@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='f110_gym',
+setup(name='aic_gym',
       version='0.2.1',
       author='Hongrui Zheng',
       author_email='billyzheng.bz@gmail.com',
