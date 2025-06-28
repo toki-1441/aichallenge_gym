@@ -59,7 +59,7 @@ test_poses[:, 2] = np.linspace(-1., 1., num=num_test)
 # map 1: vegas
 map_path = '../../../maps/vegas.yaml'
 map_ext = '.png'
-racecar_env = gym.make('f110_gym:f110-v0')
+racecar_env = gym.make('aic_gym:aic-v0')
 racecar_env.init_map(map_path, map_ext, False, False)
 racecar_env.update_params(mu, h_cg, l_r, cs_f, cs_r, I_z, mass, executable_dir, double_finish=True)
 vegas_scan = np.empty((num_test, 1080))
@@ -73,7 +73,7 @@ for i in range(test_poses.shape[0]):
 # map 2: berlin
 map_path = '../../../maps/berlin.yaml'
 map_ext = '.png'
-racecar_env = gym.make('f110_gym:f110-v0')
+racecar_env = gym.make('aic_gym:aic-v0')
 racecar_env.init_map(map_path, map_ext, False, False)
 racecar_env.update_params(mu, h_cg, l_r, cs_f, cs_r, I_z, mass, executable_dir, double_finish=True)
 berlin_scan = np.empty((num_test, 1080))
@@ -87,7 +87,7 @@ for i in range(test_poses.shape[0]):
 # map 3: skirk
 map_path = '../../../maps/skirk.yaml'
 map_ext = '.png'
-racecar_env = gym.make('f110_gym:f110-v0')
+racecar_env = gym.make('aic_gym:aic-v0')
 racecar_env.init_map(map_path, map_ext, False, False)
 racecar_env.update_params(mu, h_cg, l_r, cs_f, cs_r, I_z, mass, executable_dir, double_finish=True)
 skirk_scan = np.empty((num_test, 1080))

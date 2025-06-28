@@ -53,7 +53,7 @@ import csv
 # from matplotlib.pyplot import imshow
 # import matplotlib.pyplot as plt
 
-class F110Env(gym.Env, utils.EzPickle):
+class AICEnv(gym.Env, utils.EzPickle):
     """
     OpenAI gym environment for F1/10 simulator
     Use 0mq's REQ-REP pattern to communicate to the C++ simulator
